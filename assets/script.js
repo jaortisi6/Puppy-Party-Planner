@@ -1,3 +1,4 @@
+
 $(document).ready(function () {
   const apiKey = "9a0309c7af4ea96821317cd0a1f455e1";
   let searchTerms = {

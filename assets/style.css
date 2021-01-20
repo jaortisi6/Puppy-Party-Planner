@@ -1,3 +1,19 @@
+
+.currentCity{
+    font-weight: 750;
+    font-size: x-large;
+}
+.gif{
+    width: 100%;
+}
+.info{
+    vertical-align: bottom;
+}
+.results{
+    padding: 10px;
+    line-height: 1;
+}
+
 .row {
     margin: 0px auto;
 }
