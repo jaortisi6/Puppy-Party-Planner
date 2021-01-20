@@ -20,29 +20,57 @@
         <div class="col s2 blue">
             <div class='row yellow'>
                 <div class="input-field col s6">
-                    <input placeholder="Choose a City" id="searchField" type="text" class="validate">
-                    <button id="searchBtn">Party!</button>
+                    <form>
+                        <input placeholder="Choose a City" id="searchField" type="text" class="validate">
+
+                        <p>Choose your Weather</p>
+                        <input placeholder="Enter Minimum Temperature" id="min-temp" type="number" class="validate">
+                        <label>
+                            <input type="checkbox" id='sun' checked />
+                            <span for='sun'>Sunny</span>
+                        </label>
+                        <label>
+                            <input type="checkbox" id='clouds' checked />
+                            <span for='sun'>Cloudy</span>
+                        </label>
+                        <label>
+                            <input type="checkbox" id='rain' />
+                            <span for='rain'>Rainy</span>
+                        </label>
+
+                        <label>
+                            <input type="checkbox" id='wind' />
+                            <span for='wind'>Windy</span>
+                        </label>
+
+                        <label>
+                            <input type="checkbox" id="snow" />
+                            <span for='snow'>Snowy</span>
+                        </label>
+
+                        <label>
+                            <input type="checkbox" id="morning" checked />
+                            <span for='morning'>Morning</span>
+                        </label>
+                        <label>
+                            <input type="checkbox" id="lunch" checked />
+                            <span for='lunch'>Lunch</span>
+                        </label>
+                        <label>
+                            <input type="checkbox" id="afternoon" checked />
+                            <span for='afternoon'>Afternoon</span>
+                        </label>
+                        <label>
+                            <input type="checkbox" id="evening" checked />
+                            <span for='evening'>Evening</span>
+                        </label>
+
+                        <section>
+                            <button id="searchBtn">Party!</button>
+                        </section>
+                    </form>
                 </div>
             </div>
-            <div class='row orange'>
-                <p>
-                    <label>
-                        <input type="checkbox" />
-                        <span>Sun</span>
-                    </label>
-
-                    <label>
-                        <input type="checkbox" />
-                        <span>Rain</span>
-                    </label>
-
-                    <label>
-                        <input type="checkbox" />
-                        <span>Snow</span>
-                    </label>
-                </p>
-            </div>
-            <div class='row red'>past searches</div>
         </div>
         <div class="col s8 p3 green">
             <div id="results" class='row amber results'>
@@ -68,16 +96,13 @@
     </div>
 
 
-
-
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
     <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-        crossorigin="anonymous"></script> -->
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js"></script>
     <script src="./assets/script.js"></script>
 </body>
 
