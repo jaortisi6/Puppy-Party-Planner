@@ -26,10 +26,13 @@
                         <p>Choose your Weather</p>
                         <input placeholder="Enter Minimum Temperature" id="min-temp" type="number" class="validate">
                         <label>
-                            <input type="checkbox" id='sun' />
+                            <input type="checkbox" id='sun' checked />
                             <span for='sun'>Sunny</span>
                         </label>
-
+                        <label>
+                            <input type="checkbox" id='clouds' checked />
+                            <span for='sun'>Cloudy</span>
+                        </label>
                         <label>
                             <input type="checkbox" id='rain' />
                             <span for='rain'>Rainy</span>
@@ -44,6 +47,24 @@
                             <input type="checkbox" id="snow" />
                             <span for='snow'>Snowy</span>
                         </label>
+
+                        <label>
+                            <input type="checkbox" id="morning" checked />
+                            <span for='morning'>Morning</span>
+                        </label>
+                        <label>
+                            <input type="checkbox" id="lunch" checked />
+                            <span for='lunch'>Lunch</span>
+                        </label>
+                        <label>
+                            <input type="checkbox" id="afternoon" checked />
+                            <span for='afternoon'>Afternoon</span>
+                        </label>
+                        <label>
+                            <input type="checkbox" id="evening" checked />
+                            <span for='evening'>Evening</span>
+                        </label>
+
                         <section>
                             <button id="searchBtn">Party!</button>
                         </section>
@@ -75,15 +96,10 @@
     </div>
 
 
-
-
-    </div>
-
-    </div>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js"></script>
     <script src="./assets/script.js"></script>
 </body>
 
