@@ -204,29 +204,71 @@ $(document).ready(function () {
     return Math.floor((temp - 273) * 1.8 + 32);
   }
 
-  $("#results").on("click", function(event){
+  $("#results").on("click", function (event) {
     event.preventDefault();
     let newSavedItem = {
-      city:(currentCitySearch),
-      date:(timeList[event.target.id].dt),
-      weather:(timeList[event.target.id].weather[0].description),
-      gif:(timeList[event.target.id].gif),
-      temp:(convertTemp(timeList[event.target.id].main.temp)),
-      feelsLike:(convertTemp(timeList[event.target.id].main.feels_like)),
+      city: (currentCitySearch),
+      date: (timeList[event.target.id].dt),
+      weather: (timeList[event.target.id].weather[0].description),
+      gif: (timeList[event.target.id].gif),
+      temp: (convertTemp(timeList[event.target.id].main.temp)),
+      feelsLike: (convertTemp(timeList[event.target.id].main.feels_like)),
     }
-    puppyParties.push(newSavedItem);
-    puppyParties = sortParties(puppyParties);
+
+    let listIndex = puppyParties.findIndex((party) => party.date === newSavedItem.date);
+    if (listIndex === -1) {
+      puppyParties.push(newSavedItem);
+    } else {
+      console.log("You already have a party at that time!")
+    }
+
+    puppyParties.sort((a, b) => a.date - b.date);
+
+    $("#savedResults").empty();
+    puppyParties.map((party) => displaySavedResults(party));
+
     localStorage.setItem("puppyParties", JSON.stringify(puppyParties));
+
     console.log(newSavedItem);
-    
+
+
   })
 
-  function sortParties(parties){
-    return parties
-  }
-
-  function displaySavedResults(){
-    
+  function displaySavedResults(party) {
+    let result = $("<div>").addClass("row results");
+    // assembles element for the gif
+    let gifHolder = $("<div>").addClass("col s4 blue");
+    let gif = $("<img>")
+      .addClass("gif circle")
+      .attr("src", party.gif)
+    gifHolder.append(gif);
+    //assembles 1st column of data
+    let column1 = $("<div>").addClass("col info");
+    let currentCity = $("<p>")
+      .addClass("currentCity")
+      .text(party.city);
+    let timeAndDate = $("<p>")
+      .addClass("party")
+      .text(party.date);
+    let weatherDescription = $("<p>")
+      .addClass("party")
+      .text(party.weather)
+    column1.append(currentCity, timeAndDate, weatherDescription);
+    //assembles secnod column of data
+    let column2 = $("<div>").addClass("col info");
+    let temp = $("<p>")
+      .addClass("temp")
+      .text(convertTemp(party.temp));
+    let feelsLike = $("<p>")
+      .addClass("feelsLike")
+      .text(convertTemp(party.feelsLike));
+    // let saveButton = $("<button>").attr("id", index)
+    //   .addClass("save-button")
+    //   .text("save");
+    column2.append(temp, feelsLike);
+    // adds everything together and renders it to the display
+    result.append(column1, column2, gifHolder);
+    $("#savedResults").append(result);
   }
 
 });
