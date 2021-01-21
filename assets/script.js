@@ -19,6 +19,12 @@ $(document).ready(function () {
 
   let timeZone = 0;
 
+  let timeList = []
+
+  let currentCitySearch = ""
+
+  let puppyParties = JSON.parse(localStorage.getItem("puppyParties")) || []
+
   $("#searchBtn").on("click", function (event) {
     event.preventDefault();
 
@@ -37,8 +43,8 @@ $(document).ready(function () {
       afternoon: $("#afternoon").prop("checked"),
       evening: $("#evening").prop("checked"),
     };
-
-    getWeatherData($("#searchField").val().trim());
+    currentCitySearch = $("#searchField").val().trim()
+    getWeatherData(currentCitySearch);
   });
 
   const getWeatherData = (searchTerm) => {
@@ -50,7 +56,7 @@ $(document).ready(function () {
         console.log(response);
         timeZone = response.city.timezone / 3600;
         let potentialTimeList = response.list;
-        let timeList = filterConditions(potentialTimeList);
+        timeList = filterConditions(potentialTimeList);
         timeList = filterTimes(timeList);
         console.log(timeList);
         $("#results").empty();
@@ -138,15 +144,15 @@ $(document).ready(function () {
       method: "GET",
     }).then(function (response2) {
       // assigns currentGif a random gif from the response data array.
-      let currentGif =
+      time.gif =
         response2.data[Math.floor(Math.random() * response2.data.length)].images
           .fixed_height_small.url;
-      let result = $("<div>").addClass("row results").attr("id", index);
+      let result = $("<div>").addClass("row results");
       // assembles element for the gif
       let gifHolder = $("<div>").addClass("col s4 blue");
       let gif = $("<img>")
         .addClass("gif circle")
-        .attr("src", currentGif)
+        .attr("src", time.gif)
         .attr("id", `gif${index}`);
       gifHolder.append(gif);
       //assembles 1st column of data
@@ -154,7 +160,7 @@ $(document).ready(function () {
       let currentCity = $("<p>")
         .addClass("currentCity")
         .attr("id", `city${index}`)
-        .text($("#searchField").val().trim());
+        .text(currentCitySearch);
       let timeAndDate = $("<p>")
         .addClass("time")
         .attr("id", `time${index}`)
@@ -174,7 +180,10 @@ $(document).ready(function () {
         .addClass("feelsLike")
         .attr("id", `feelsLike${index}`)
         .text(convertTemp(time.main.feels_like));
-      column2.append(temp, feelsLike);
+      let saveButton = $("<button>").attr("id", index)
+        .addClass("save-button")
+        .text("save");
+      column2.append(temp, feelsLike, saveButton);
       // adds everything together and renders it to the display
       result.append(gifHolder, column1, column2);
       $("#results").append(result);
@@ -194,4 +203,72 @@ $(document).ready(function () {
   function convertTemp(temp) {
     return Math.floor((temp - 273) * 1.8 + 32);
   }
+
+  $("#results").on("click", function (event) {
+    event.preventDefault();
+    let newSavedItem = {
+      city: (currentCitySearch),
+      date: (timeList[event.target.id].dt),
+      weather: (timeList[event.target.id].weather[0].description),
+      gif: (timeList[event.target.id].gif),
+      temp: (convertTemp(timeList[event.target.id].main.temp)),
+      feelsLike: (convertTemp(timeList[event.target.id].main.feels_like)),
+    }
+
+    let listIndex = puppyParties.findIndex((party) => party.date === newSavedItem.date);
+    if (listIndex === -1) {
+      puppyParties.push(newSavedItem);
+    } else {
+      console.log("You already have a party at that time!")
+    }
+
+    puppyParties.sort((a, b) => a.date - b.date);
+
+    $("#savedResults").empty();
+    puppyParties.map((party) => displaySavedResults(party));
+
+    localStorage.setItem("puppyParties", JSON.stringify(puppyParties));
+
+    console.log(newSavedItem);
+
+
+  })
+
+  function displaySavedResults(party) {
+    let result = $("<div>").addClass("row results");
+    // assembles element for the gif
+    let gifHolder = $("<div>").addClass("col s4 blue");
+    let gif = $("<img>")
+      .addClass("gif circle")
+      .attr("src", party.gif)
+    gifHolder.append(gif);
+    //assembles 1st column of data
+    let column1 = $("<div>").addClass("col info");
+    let currentCity = $("<p>")
+      .addClass("currentCity")
+      .text(party.city);
+    let timeAndDate = $("<p>")
+      .addClass("party")
+      .text(party.date);
+    let weatherDescription = $("<p>")
+      .addClass("party")
+      .text(party.weather)
+    column1.append(currentCity, timeAndDate, weatherDescription);
+    //assembles secnod column of data
+    let column2 = $("<div>").addClass("col info");
+    let temp = $("<p>")
+      .addClass("temp")
+      .text(convertTemp(party.temp));
+    let feelsLike = $("<p>")
+      .addClass("feelsLike")
+      .text(convertTemp(party.feelsLike));
+    // let saveButton = $("<button>").attr("id", index)
+    //   .addClass("save-button")
+    //   .text("save");
+    column2.append(temp, feelsLike);
+    // adds everything together and renders it to the display
+    result.append(column1, column2, gifHolder);
+    $("#savedResults").append(result);
+  }
+
 });
