@@ -7,6 +7,8 @@
     <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Londrina+Shadow&display=swap" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="./assets/style.css" />
     <title>Puppy Party Planner</title>
 </head>
@@ -16,11 +18,11 @@
         <h1>Puppy Party Planner</h1>
     </header>
 
-    <div class="row pink">
-        <div class="col s2 blue">
-            <div class='row yellow'>
-                <div class="input-field col s6">
-                    <form>
+    <div class="row">
+        <div class="col s2">
+            <div class='row'>
+                <div class="input-field col">
+                    <form class="col-content center-align searchBar">
                         <input placeholder="Choose a City" id="searchField" type="text" class="validate">
 
                         <p>Choose your Weather</p>
@@ -74,21 +76,7 @@
         </div>
         <div class="col s8 p3 green">
             <div id="results" class='row amber results'>
-                <div class="col s4 blue">
-                    <img src="" class="gif circle">
-                </div>
-                <div class="col info">
-                    <p class="currentCity"></p>
-                    <p class="time"></p>
-                    <p class="weather"></p>
-                </div>
-                <div class="col info">
-                    <p class="temp"></p>
-                    <p class="feelLike"></p>
-                </div>
-                <div class="col info">
-                    <p class="wind"></p>
-                </div>
+               
             </div>
             <div class='row grey'> other results</div>
         </div>
