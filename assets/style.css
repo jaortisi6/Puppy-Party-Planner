@@ -1,44 +1,53 @@
 body {
     background-color: #FEFABB;
 }
+
 header {
     background-color: #FEFABB;
     font-family: 'Londrina Shadow', cursive;
     color: #D87551;
     padding-left: 20px;
 }
+
 span {
     font-family: 'Mali', cursive;
     color: #AB8459;
 }
+
 p {
     font-family: 'Mali', cursive;
 }
-.currentCity{
+
+.currentCity {
     font-weight: 750;
     font-size: x-large;
 }
-.gif{
+
+.gif {
     width: 100%;
 }
-.info{
+
+.info {
     vertical-align: bottom;
 }
-.results{
+
+.results {
     padding: 10px;
     line-height: 1;
     background-color: #EABC69;
     border-radius: 25px;
 }
+
 .row {
     margin: 0px auto;
 }
+
 .savedResults {
     border-radius: 25px;
     background-color: #53D9C5;
     padding: 15px;
-    
 }
+
 .searchBar {
     border-radius: 25px;
     background-color: #D8D115;
@@ -46,17 +55,20 @@ p {
     padding-right: 25%;
     padding-bottom: 15px;
 }
+
 .smoosh {
     text-align: center;
     width: 60%;
     font-family: 'Mali', cursive;
 }
+
 .toastie {
     width: 20%;
     float: left;
 }
-::placeholder { /* WebKit, Blink, Edge */
+
+/* ::placeholder { 
     color:    #AB8459;
     text-align: center;
     font-family: 'Mali', cursive;
-}
+} */
