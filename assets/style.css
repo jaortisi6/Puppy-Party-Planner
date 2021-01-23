@@ -58,7 +58,6 @@ p {
 
 .smoosh {
     text-align: center;
-    width: 60%;
     font-family: 'Mali', cursive;
 }
 
@@ -67,9 +66,14 @@ p {
     float: left;
 }
 
-::placeholder { 
-    color:    #AB8459;
+::placeholder {
+    color: #AB8459;
     text-align: center;
     font-family: 'Mali', cursive;
-} 
+}
 
+@media screen and (max-width: 576px) {
+    h2 {
+        font-size: 30px;
+    }
+}
