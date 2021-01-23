@@ -39,7 +39,7 @@ p {
 }
 
 .row {
-    margin: 0px auto;
+    margin: 0px 10px;
 }
 
 .savedResults {
@@ -72,3 +72,4 @@ p {
     text-align: center;
     font-family: 'Mali', cursive;
 } 
+

@@ -193,7 +193,7 @@ $(document).ready(function () {
   }
 
   function displaySavedResults(party, index) {
-    let result = $("<div>").addClass("row results");
+    let result = $("<div>").addClass("row savedResults");
     // assembles element for the gif
     let gifHolder = $("<div>").addClass("col s4");
     let gif = $("<img>").addClass("gif circle").attr("src", party.gif);
