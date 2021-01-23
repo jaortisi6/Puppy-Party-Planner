@@ -60,3 +60,4 @@ Areas for further development include utilizing Google Maps API, to give user ne
 - Carly Peyton
 
 - Artwork by Megan Broski @melon.dreams
+
