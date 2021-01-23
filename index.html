@@ -21,7 +21,7 @@
     </header>
 
     <div class="row">
-        <div class="col s2">
+        <div class="col s6 m2">
             <div class='row'>
                 <div class="input-field col">
                     <form class="col-content center-align searchBar">
@@ -29,46 +29,49 @@
 
                         <p>Choose your Weather</p>
                         <input placeholder="Enter Min Temp" id="min-temp" type="number" class="validate">
-                        <label>
-                            <input type="checkbox" id='sun' checked />
-                            <span for='sun'>Sunny</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" id='clouds' checked />
-                            <span for='sun'>Cloudy</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" id='rain' />
-                            <span for='rain'>Rainy</span>
-                        </label>
+                        <section>
+                            <label>
+                                <input type="checkbox" id='sun' checked />
+                                <span for='sun'>Sunny</span>
+                            </label>
+                            <label>
+                                <input type="checkbox" id='clouds' checked />
+                                <span for='sun'>Cloudy</span>
+                            </label>
+                            <label>
+                                <input type="checkbox" id='rain' />
+                                <span for='rain'>Rainy</span>
+                            </label>
 
-                        <label>
-                            <input type="checkbox" id='wind' />
-                            <span for='wind'>Windy</span>
-                        </label>
+                            <label>
+                                <input type="checkbox" id='wind' />
+                                <span for='wind'>Windy</span>
+                            </label>
 
-                        <label>
-                            <input type="checkbox" id="snow" />
-                            <span for='snow'>Snowy</span>
-                        </label>
-
-                        <label>
-                            <input type="checkbox" id="morning" checked />
-                            <span for='morning'>Morning</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" id="lunch" checked />
-                            <span for='lunch'>Lunch</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" id="afternoon" checked />
-                            <span for='afternoon'>Afternoon</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" id="evening" checked />
-                            <span for='evening'>Evening</span>
-                        </label>
-
+                            <label>
+                                <input type="checkbox" id="snow" />
+                                <span for='snow'>Snowy</span>
+                            </label>
+                        </section>
+                        <br>
+                        <section>
+                            <label>
+                                <input type="checkbox" id="morning" checked />
+                                <span for='morning'>Morning</span>
+                            </label>
+                            <label>
+                                <input type="checkbox" id="lunch" checked />
+                                <span for='lunch'>Lunch</span>
+                            </label>
+                            <label>
+                                <input type="checkbox" id="afternoon" checked />
+                                <span for='afternoon'>Afternoon</span>
+                            </label>
+                            <label>
+                                <input type="checkbox" id="evening" checked />
+                                <span for='evening'>Evening</span>
+                            </label>
+                        </section>
                         <section>
                             <button id="searchBtn">Party!</button>
                         </section>
@@ -76,20 +79,22 @@
                 </div>
             </div>
         </div>
-        <div class="col s6">
-            <div id="results" class='row results'>
+
+        <div class="col s6 m4">
+            <div id="results" class='row results '>
                 <img class="toastie" src="./assets/toast button.png">
-                <h1 class="smoosh">Welcome!</h1>
+                <h1 class="smoosh ">Welcome!</h1>
                 <p class="smoosh">This is the Puppy Party Planner! Use the search bar to the left to begin planning your
                     perfect puppy party!</p>
             </div>
         </div>
-        <div id="savedResults" class="col s4">
+        <div id="savedResults" class="col s6 m6 ">
             <div class="col-content savedResults">
                 <p> You don’t have any puppy parties planned. Check the weather in your area to get the party started.
                 </p>
             </div>
         </div>
+
     </div>
 
 

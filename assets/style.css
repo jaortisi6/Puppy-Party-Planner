@@ -39,7 +39,7 @@ p {
 }
 
 .row {
-    margin: 0px auto;
+    margin: 0px 10px;
 }
 
 .savedResults {
@@ -67,8 +67,8 @@ p {
     float: left;
 }
 
-/* ::placeholder { 
-    color:    #AB8459;
+::placeholder {
+    color: #AB8459;
     text-align: center;
     font-family: 'Mali', cursive;
-} */
+}
