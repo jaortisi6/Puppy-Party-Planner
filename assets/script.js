@@ -1,4 +1,6 @@
+//Calling document.ready to make sure JQuery works as expected
 $(document).ready(function () {
+  //Initializing variables
   const apiKey = "9a0309c7af4ea96821317cd0a1f455e1";
   let searchTerms = {
     minTemp: 0,
@@ -19,31 +21,35 @@ $(document).ready(function () {
   let timeZone = 0;
   let timeList = [];
   let currentCitySearch = "";
-
+//Loading saved parties from local storage if they exist, if none, setting puppyParties = to an empty array
   let puppyParties = JSON.parse(localStorage.getItem("puppyParties")) || [];
-
+//If there are saved parties, renders parties to the screen
   if (puppyParties.length > 0) {
     $("#savedResults").empty();
-
+//Removes any parties with past dates from the screen
     puppyParties = puppyParties.filter(
       (party) => party.date >= Date.now() / 1000
     );
     localStorage.setItem("puppyParties", JSON.stringify(puppyParties));
     puppyParties.map((party, index) => displaySavedResults(party, index));
   }
-
+//Calling the openweathermap API with the search term in the input field
   function getWeatherData(searchTerm) {
     $.ajax({
       url: `https://api.openweathermap.org/data/2.5/forecast?q=${searchTerm}&appid=${apiKey}`,
       method: "GET",
     })
       .then(function (response) {
+        //Assigns current city and time zone from the API response
         currentCitySearch = response.city.name;
         timeZone = response.city.timezone / 3600;
+        //Filtering potential time slots from response data
         let potentialTimeList = response.list;
         timeList = filterConditions(potentialTimeList);
         timeList = filterTimes(timeList);
+        //Clearing the results field and displaying new results
         $("#results").empty();
+        //If there are results, calls displayTimeInfo for each result 
         if (timeList.length > 0) {
           timeList.map((time, index) => displayTimeInfo(time, index));
         } else {
@@ -55,8 +61,9 @@ $(document).ready(function () {
         $("#searchField").val("");
       });
   }
-
+//Filter out any weather conditions that do not match the search criteria
   function filterConditions(times) {
+    //For each time, the .filter function returns values that align with the desired weather conditions set by the user
     times = times.filter(
       (time) => convertTemp(time.main.temp) >= searchTerms.minTemp
     );
@@ -76,14 +83,18 @@ $(document).ready(function () {
     if (!searchTerms.isSnow) {
       times = times.filter((time) => time.weather[0].main !== "Snow");
     }
+    //No, you cannot actually take you precious puppy out in a thunderstorm!
     times = times.filter((time) => time.weather[0].main !== "Thunderstorm");
 
     return times;
   }
-
+//Returns time-slots that match the time of day selected by the user
   function filterTimes(times) {
     let filteredTimes = [];
     for (let i = 0; i < times.length; i++) {
+      //Looks at each individual result, compares time of day with selected time options
+      //Then, gives object value corresponding to time of day
+      //Adds object to array to be returned
       if (
         availableTimes.morning &&
         convertTimeToHour(times[i].dt) < 12 &&
@@ -117,6 +128,7 @@ $(document).ready(function () {
         filteredTimes.push(times[i]);
       }
     }
+    //Sorts results into chronological order
     filteredTimes.sort((a, b) => a.dt - b.dt);
     return filteredTimes;
   }
@@ -127,7 +139,7 @@ $(document).ready(function () {
 
   function displayNoResults() {
     $("#results").html(
-      "there were no results matching your search, please try"
+      "There were no results matching your search, please try again!"
     );
   }
 
