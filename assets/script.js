@@ -21,19 +21,19 @@ $(document).ready(function () {
   let timeZone = 0;
   let timeList = [];
   let currentCitySearch = "";
-//Loading saved parties from local storage if they exist, if none, setting puppyParties = to an empty array
+  //Loading saved parties from local storage if they exist, if none, setting puppyParties = to an empty array
   let puppyParties = JSON.parse(localStorage.getItem("puppyParties")) || [];
-//If there are saved parties, renders parties to the screen
+  //If there are saved parties, renders parties to the screen
   if (puppyParties.length > 0) {
     $("#savedResults").empty();
-//Removes any parties with past dates from the screen
+    //Removes any parties with past dates from the screen
     puppyParties = puppyParties.filter(
       (party) => party.date >= Date.now() / 1000
     );
     localStorage.setItem("puppyParties", JSON.stringify(puppyParties));
     puppyParties.map((party, index) => displaySavedResults(party, index));
   }
-//Calling the openweathermap API with the search term in the input field
+  //Calling the openweathermap API with the search term in the input field
   function getWeatherData(searchTerm) {
     $.ajax({
       url: `https://api.openweathermap.org/data/2.5/forecast?q=${searchTerm}&appid=${apiKey}`,
@@ -62,7 +62,7 @@ $(document).ready(function () {
         $("#searchField").val("");
       });
   }
-//Filter out any weather conditions that do not match the search criteria
+  //Filter out any weather conditions that do not match the search criteria
   function filterConditions(times) {
     //For each time, the .filter function returns values that align with the desired weather conditions set by the user
     times = times.filter(
@@ -89,7 +89,7 @@ $(document).ready(function () {
 
     return times;
   }
-//Returns time-slots that match the time of day selected by the user
+  //Returns time-slots that match the time of day selected by the user
   function filterTimes(times) {
     let filteredTimes = [];
     for (let i = 0; i < times.length; i++) {
@@ -165,7 +165,7 @@ $(document).ready(function () {
         response2.data[
           Math.floor(Math.random() * response2.data.length)
         ].images.fixed_height.url;
-        // start assembling the individual display div
+      // start assembling the individual display div
       let result = $("<div>").addClass("row results");
       // assembles element for the gif
       let gifHolder = $("<div>").addClass("col s4");
@@ -200,7 +200,7 @@ $(document).ready(function () {
       let wind = $("<p>")
         .addClass("wind")
         .text(`Wind Speed: ${time.wind.speed} m/s`);
-        // creates a save button
+      // creates a save button
       let saveButton = $("<button>")
         .attr("id", index)
         .addClass("save-button btn waves-effect waves-yellow")
@@ -248,9 +248,10 @@ $(document).ready(function () {
     $("#savedResults").append(result);
   }
 
+  //Click event for user performing search
   $("#searchBtn").on("click", function (event) {
     event.preventDefault();
-
+    //Set data for preferred weather conditions
     searchTerms = {
       minTemp: $("#min-temp").val().trim() || 0,
       isSun: $("#sun").prop("checked"),
@@ -259,20 +260,23 @@ $(document).ready(function () {
       isSnow: $("#snow").prop("checked"),
       isWind: $("#wind").prop("checked"),
     };
-
+    //Setting data for preferred time of day
     availableTimes = {
       morning: $("#morning").prop("checked"),
       lunch: $("#lunch").prop("checked"),
       afternoon: $("#afternoon").prop("checked"),
       evening: $("#evening").prop("checked"),
     };
+    //Sets current city search to the value of the search field
     currentCitySearch = $("#searchField").val().trim();
     getWeatherData(currentCitySearch);
   });
-
+  //Click event for saving party
   $("#results").on("click", function (event) {
     event.preventDefault();
+    //Confirm that the user has clicked the save button
     if (event.target.id) {
+      //Save needed data to object
       let newSavedItem = {
         city: currentCitySearch,
         date: timeList[event.target.id].dt,
@@ -283,29 +287,33 @@ $(document).ready(function () {
         feelsLike: convertTemp(timeList[event.target.id].main.feels_like),
         wind: timeList[event.target.id].wind.speed,
       };
-
+      //Check to make sure that we do not already have a party planned at that time
       let listIndex = puppyParties.findIndex(
         (party) => party.date === newSavedItem.date
       );
+      //If no results are found, the list index will equal -1, and it will add to list of parties
       if (listIndex === -1) {
         puppyParties.push(newSavedItem);
       } else {
         console.log("You already have a party at that time!");
       }
-
+      //Sorts puppy parties by soonest to latest date/time
       puppyParties.sort((a, b) => a.date - b.date);
-
+      //Displays the saved results and saves to local storage
       $("#savedResults").empty();
       puppyParties.map((party, index) => displaySavedResults(party, index));
       localStorage.setItem("puppyParties", JSON.stringify(puppyParties));
     }
   });
-
+  //Delete a party 
   $("#savedResults").on("click", function (event) {
     event.preventDefault();
+    //Make sure user is clicking delete button
     if ($(event.target).attr("key")) {
+      //Remove matching item from array
       puppyParties.splice($(event.target).attr("key"), 1);
       $("#savedResults").empty();
+      //Update display and storage
       puppyParties.map((party, index) => displaySavedResults(party, index));
       localStorage.setItem("puppyParties", JSON.stringify(puppyParties));
     }
