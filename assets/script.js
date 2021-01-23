@@ -149,7 +149,7 @@ $(document).ready(function () {
         ].images.fixed_height.url;
       let result = $("<div>").addClass("row results");
       // assembles element for the gif
-      let gifHolder = $("<div>").addClass("col s4 blue");
+      let gifHolder = $("<div>").addClass("col s4");
       let gif = $("<img>").addClass("gif circle").attr("src", time.gif);
 
       gifHolder.append(gif);
@@ -195,7 +195,7 @@ $(document).ready(function () {
   function displaySavedResults(party, index) {
     let result = $("<div>").addClass("row results");
     // assembles element for the gif
-    let gifHolder = $("<div>").addClass("col s4 blue");
+    let gifHolder = $("<div>").addClass("col s4");
     let gif = $("<img>").addClass("gif circle").attr("src", party.gif);
     gifHolder.append(gif);
     //assembles 1st column of data
@@ -251,31 +251,33 @@ $(document).ready(function () {
 
   $("#results").on("click", function (event) {
     event.preventDefault();
-    let newSavedItem = {
-      city: currentCitySearch,
-      date: timeList[event.target.id].dt,
-      timeOfDay: timeList[event.target.id].timeOfDay,
-      weather: timeList[event.target.id].weather[0].description,
-      gif: timeList[event.target.id].gif,
-      temp: convertTemp(timeList[event.target.id].main.temp),
-      feelsLike: convertTemp(timeList[event.target.id].main.feels_like),
-      wind: timeList[event.target.id].wind.speed,
-    };
+    if (event.target.id) {
+      let newSavedItem = {
+        city: currentCitySearch,
+        date: timeList[event.target.id].dt,
+        timeOfDay: timeList[event.target.id].timeOfDay,
+        weather: timeList[event.target.id].weather[0].description,
+        gif: timeList[event.target.id].gif,
+        temp: convertTemp(timeList[event.target.id].main.temp),
+        feelsLike: convertTemp(timeList[event.target.id].main.feels_like),
+        wind: timeList[event.target.id].wind.speed,
+      };
 
-    let listIndex = puppyParties.findIndex(
-      (party) => party.date === newSavedItem.date
-    );
-    if (listIndex === -1) {
-      puppyParties.push(newSavedItem);
-    } else {
-      console.log("You already have a party at that time!");
+      let listIndex = puppyParties.findIndex(
+        (party) => party.date === newSavedItem.date
+      );
+      if (listIndex === -1) {
+        puppyParties.push(newSavedItem);
+      } else {
+        console.log("You already have a party at that time!");
+      }
+
+      puppyParties.sort((a, b) => a.date - b.date);
+
+      $("#savedResults").empty();
+      puppyParties.map((party, index) => displaySavedResults(party, index));
+      localStorage.setItem("puppyParties", JSON.stringify(puppyParties));
     }
-
-    puppyParties.sort((a, b) => a.date - b.date);
-
-    $("#savedResults").empty();
-    puppyParties.map((party, index) => displaySavedResults(party, index));
-    localStorage.setItem("puppyParties", JSON.stringify(puppyParties));
   });
 
   $("#savedResults").on("click", function (event) {
