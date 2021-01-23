@@ -51,6 +51,7 @@ $(document).ready(function () {
         $("#results").empty();
         //If there are results, calls displayTimeInfo for each result 
         if (timeList.length > 0) {
+          // .map fuction sends each item in the array to the function displayTimeInfo
           timeList.map((time, index) => displayTimeInfo(time, index));
         } else {
           displayNoResults();
@@ -133,39 +134,45 @@ $(document).ready(function () {
     return filteredTimes;
   }
 
+  // converts unix time to an hour with adjustments for timezone
   function convertTimeToHour(dt) {
     return dayjs.unix(dt).hour() + timeZone;
   }
 
+  // returns feedback if their search returns no results
   function displayNoResults() {
     $("#results").html(
       "There were no results matching your search, please try again!"
     );
   }
 
+  // converts temp from Kelvin to Fahrenheit
   function convertTemp(temp) {
     return Math.floor((temp - 273) * 1.8 + 32);
   }
 
+  // This function displays search results
   function displayTimeInfo(time, index) {
+    // This calls the gifphy api for images with puppys matching the weather conditions 
     $.ajax({
       url:
         "https://api.giphy.com/v1/gifs/search?api_key=fZhobxIiFz471XOHLmXNOBjfo8xFJf5b&rating=g&q=cute+puppy+in+the+" +
         time.weather[0].main,
       method: "GET",
     }).then(function (response2) {
-      // assigns currentGif a random gif from the response data array.
+      // gives current object a key of gif with a value of a gif randomly selected from the response
       time.gif =
         response2.data[
           Math.floor(Math.random() * response2.data.length)
         ].images.fixed_height.url;
+        // start assembling the individual display div
       let result = $("<div>").addClass("row results");
       // assembles element for the gif
       let gifHolder = $("<div>").addClass("col s4");
       let gif = $("<img>").addClass("gif circle").attr("src", time.gif);
 
       gifHolder.append(gif);
-      //assembles 1st column of data
+      // assembles 1st column of data
       let column1 = $("<div>").addClass("col info");
       let currentCity = $("<p>")
         .addClass("currentCity")
@@ -179,7 +186,7 @@ $(document).ready(function () {
         .text(time.weather[0].description);
 
       column1.append(currentCity, timeAndDate, timeOfDay, weatherDescription);
-      //assembles secnod column of data
+      // assembles second column of data
       let column2 = $("<div>").addClass("col info");
       let temp = $("<p>")
         .addClass("temp")
@@ -193,6 +200,7 @@ $(document).ready(function () {
       let wind = $("<p>")
         .addClass("wind")
         .text(`Wind Speed: ${time.wind.speed} m/s`);
+        // creates a save button
       let saveButton = $("<button>")
         .attr("id", index)
         .addClass("save-button btn waves-effect waves-yellow")
@@ -210,7 +218,7 @@ $(document).ready(function () {
     let gifHolder = $("<div>").addClass("col s4");
     let gif = $("<img>").addClass("gif circle").attr("src", party.gif);
     gifHolder.append(gif);
-    //assembles 1st column of data
+    // assembles 1st column of data
     let column1 = $("<div>").addClass("col");
     let currentCity = $("<p>").addClass("currentCity").text(party.city);
     let timeAndDate = $("<p>")
@@ -219,7 +227,7 @@ $(document).ready(function () {
     let timeOfDay = $("<p>").text(party.timeOfDay);
     let weatherDescription = $("<p>").addClass("party").text(party.weather);
     column1.append(currentCity, timeAndDate, timeOfDay, weatherDescription);
-    //assembles secnod column of data
+    // assembles second column of data
     let column2 = $("<div>").addClass("col");
     let temp = $("<p>").addClass("temp").text(`Temperature: ${party.temp}`);
     let feelsLike = $("<p>")
@@ -229,6 +237,7 @@ $(document).ready(function () {
     $("<span>").html("&#176;F").appendTo(feelsLike);
 
     let wind = $("<p>").addClass("wind").text(`Wind Speed: ${party.wind} m/s`);
+    // creates a delete button
     let deleteButton = $("<button>")
       .attr("key", index)
       .addClass("delete-button btn waves-effect waves-yellow")
