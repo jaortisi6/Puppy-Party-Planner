@@ -127,7 +127,7 @@ $(document).ready(function () {
 
   function displayNoResults() {
     $("#results").html(
-      "there were no results matching your search, please try"
+      "There were no results matching your search, please try again!"
     );
   }
 
