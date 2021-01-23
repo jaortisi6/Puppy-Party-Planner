@@ -183,7 +183,7 @@ $(document).ready(function () {
         .text(`Wind Speed: ${time.wind.speed} m/s`);
       let saveButton = $("<button>")
         .attr("id", index)
-        .addClass("save-button")
+        .addClass("save-button btn waves-effect waves-yellow")
         .text("save");
       column2.append(temp, feelsLike, wind, saveButton);
       // adds everything together and renders it to the display
@@ -219,7 +219,7 @@ $(document).ready(function () {
     let wind = $("<p>").addClass("wind").text(`Wind Speed: ${party.wind} m/s`);
     let deleteButton = $("<button>")
       .attr("key", index)
-      .addClass("delete-button")
+      .addClass("delete-button btn waves-effect waves-yellow")
       .text("X");
     column2.append(temp, feelsLike, wind, deleteButton);
     // adds everything together and renders it to the display

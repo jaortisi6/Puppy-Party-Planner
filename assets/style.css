@@ -67,8 +67,9 @@ p {
     float: left;
 }
 
-::placeholder {
-    color: #AB8459;
+::placeholder { 
+    color:    #AB8459;
     text-align: center;
     font-family: 'Mali', cursive;
-}
+} 
+
