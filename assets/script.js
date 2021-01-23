@@ -1,4 +1,3 @@
-
 $(document).ready(function () {
   const apiKey = "9a0309c7af4ea96821317cd0a1f455e1";
   let searchTerms = {
@@ -18,47 +17,32 @@ $(document).ready(function () {
   };
 
   let timeZone = 0;
+  let timeList = [];
+  let currentCitySearch = "";
 
-  let timeList = []
+  let puppyParties = JSON.parse(localStorage.getItem("puppyParties")) || [];
 
-  let currentCitySearch = ""
+  if (puppyParties.length > 0) {
+    $("#savedResults").empty();
 
-  let puppyParties = JSON.parse(localStorage.getItem("puppyParties")) || []
+    puppyParties = puppyParties.filter(
+      (party) => party.date >= Date.now() / 1000
+    );
+    localStorage.setItem("puppyParties", JSON.stringify(puppyParties));
+    puppyParties.map((party, index) => displaySavedResults(party, index));
+  }
 
-  $("#searchBtn").on("click", function (event) {
-    event.preventDefault();
-
-    searchTerms = {
-      minTemp: $("#min-temp").val().trim() || 0,
-      isSun: $("#sun").prop("checked"),
-      isClouds: $("#clouds").prop("checked"),
-      isRain: $("#rain").prop("checked"),
-      isSnow: $("#snow").prop("checked"),
-      isWind: $("#wind").prop("checked"),
-    };
-
-    availableTimes = {
-      morning: $("#morning").prop("checked"),
-      lunch: $("#lunch").prop("checked"),
-      afternoon: $("#afternoon").prop("checked"),
-      evening: $("#evening").prop("checked"),
-    };
-    currentCitySearch = $("#searchField").val().trim()
-    getWeatherData(currentCitySearch);
-  });
-
-  const getWeatherData = (searchTerm) => {
+  function getWeatherData(searchTerm) {
     $.ajax({
       url: `https://api.openweathermap.org/data/2.5/forecast?q=${searchTerm}&appid=${apiKey}`,
       method: "GET",
     })
       .then(function (response) {
-        console.log(response);
+        currentCitySearch = response.city.name;
         timeZone = response.city.timezone / 3600;
         let potentialTimeList = response.list;
         timeList = filterConditions(potentialTimeList);
         timeList = filterTimes(timeList);
-        console.log(timeList);
         $("#results").empty();
         if (timeList.length > 0) {
           timeList.map((time, index) => displayTimeInfo(time, index));
@@ -68,9 +52,9 @@ $(document).ready(function () {
       })
 
       .catch(function () {
-        $("#searchField").val("Enter a city");
+        $("#searchField").val("");
       });
-  };
+  }
 
   function filterConditions(times) {
     times = times.filter(
@@ -103,9 +87,9 @@ $(document).ready(function () {
       if (
         availableTimes.morning &&
         convertTimeToHour(times[i].dt) < 12 &&
-        convertTimeToHour(times[i]) >= 9
+        convertTimeToHour(times[i].dt) >= 9
       ) {
-        times[i].timeslot = "Morning";
+        times[i].timeOfDay = "Morning";
         filteredTimes.push(times[i]);
       }
       if (
@@ -113,7 +97,7 @@ $(document).ready(function () {
         convertTimeToHour(times[i].dt) >= 12 &&
         convertTimeToHour(times[i].dt) < 15
       ) {
-        times[i].timeslot = "Lunch";
+        times[i].timeOfDay = "Lunch";
         filteredTimes.push(times[i]);
       }
       if (
@@ -121,7 +105,7 @@ $(document).ready(function () {
         convertTimeToHour(times[i].dt) >= 15 &&
         convertTimeToHour(times[i].dt) < 18
       ) {
-        times[i].timeslot = "Afternoon";
+        times[i].timeOfDay = "Afternoon";
         filteredTimes.push(times[i]);
       }
       if (
@@ -129,65 +113,12 @@ $(document).ready(function () {
         convertTimeToHour(times[i].dt) >= 18 &&
         convertTimeToHour(times[i].dt) < 21
       ) {
-        times[i].timeslot = "Evening";
+        times[i].timeOfDay = "Evening";
         filteredTimes.push(times[i]);
       }
     }
+    filteredTimes.sort((a, b) => a.dt - b.dt);
     return filteredTimes;
-  }
-
-  function displayTimeInfo(time, index) {
-    $.ajax({
-      url:
-        "https://api.giphy.com/v1/gifs/search?api_key=fZhobxIiFz471XOHLmXNOBjfo8xFJf5b&q=puppy+" +
-        time.weather[0].main,
-      method: "GET",
-    }).then(function (response2) {
-      // assigns currentGif a random gif from the response data array.
-      time.gif =
-        response2.data[Math.floor(Math.random() * response2.data.length)].images
-          .fixed_height_small.url;
-      let result = $("<div>").addClass("row results");
-      // assembles element for the gif
-      let gifHolder = $("<div>").addClass("col s4 blue");
-      let gif = $("<img>")
-        .addClass("gif circle")
-        .attr("src", time.gif)
-        .attr("id", `gif${index}`);
-      gifHolder.append(gif);
-      //assembles 1st column of data
-      let column1 = $("<div>").addClass("col info");
-      let currentCity = $("<p>")
-        .addClass("currentCity")
-        .attr("id", `city${index}`)
-        .text(currentCitySearch);
-      let timeAndDate = $("<p>")
-        .addClass("time")
-        .attr("id", `time${index}`)
-        .text(time.dt_txt);
-      let weatherDescription = $("<p>")
-        .addClass("time")
-        .text(time.weather[0].description)
-        .attr("id", `weather${index}`);
-      column1.append(currentCity, timeAndDate, weatherDescription);
-      //assembles secnod column of data
-      let column2 = $("<div>").addClass("col info");
-      let temp = $("<p>")
-        .addClass("temp")
-        .attr("id", `temp${index}`)
-        .text(convertTemp(time.main.temp));
-      let feelsLike = $("<p>")
-        .addClass("feelsLike")
-        .attr("id", `feelsLike${index}`)
-        .text(convertTemp(time.main.feels_like));
-      let saveButton = $("<button>").attr("id", index)
-        .addClass("save-button")
-        .text("save");
-      column2.append(temp, feelsLike, saveButton);
-      // adds everything together and renders it to the display
-      result.append(gifHolder, column1, column2);
-      $("#results").append(result);
-    });
   }
 
   function convertTimeToHour(dt) {
@@ -204,71 +135,156 @@ $(document).ready(function () {
     return Math.floor((temp - 273) * 1.8 + 32);
   }
 
-  $("#results").on("click", function (event) {
-    event.preventDefault();
-    let newSavedItem = {
-      city: (currentCitySearch),
-      date: (timeList[event.target.id].dt),
-      weather: (timeList[event.target.id].weather[0].description),
-      gif: (timeList[event.target.id].gif),
-      temp: (convertTemp(timeList[event.target.id].main.temp)),
-      feelsLike: (convertTemp(timeList[event.target.id].main.feels_like)),
-    }
+  function displayTimeInfo(time, index) {
+    $.ajax({
+      url:
+        "https://api.giphy.com/v1/gifs/search?api_key=fZhobxIiFz471XOHLmXNOBjfo8xFJf5b&rating=g&q=cute+puppy+in+the+" +
+        time.weather[0].main,
+      method: "GET",
+    }).then(function (response2) {
+      // assigns currentGif a random gif from the response data array.
+      time.gif =
+        response2.data[
+          Math.floor(Math.random() * response2.data.length)
+        ].images.fixed_height.url;
+      let result = $("<div>").addClass("row results");
+      // assembles element for the gif
+      let gifHolder = $("<div>").addClass("col s4 blue");
+      let gif = $("<img>").addClass("gif circle").attr("src", time.gif);
 
-    let listIndex = puppyParties.findIndex((party) => party.date === newSavedItem.date);
-    if (listIndex === -1) {
-      puppyParties.push(newSavedItem);
-    } else {
-      console.log("You already have a party at that time!")
-    }
+      gifHolder.append(gif);
+      //assembles 1st column of data
+      let column1 = $("<div>").addClass("col info");
+      let currentCity = $("<p>")
+        .addClass("currentCity")
+        .text(currentCitySearch);
+      let timeAndDate = $("<p>")
+        .addClass("time")
+        .text(dayjs.unix(time.dt).format("ddd, MMM D"));
+      let timeOfDay = $("<p>").text(time.timeOfDay);
+      let weatherDescription = $("<p>")
+        .addClass("time")
+        .text(time.weather[0].description);
 
-    puppyParties.sort((a, b) => a.date - b.date);
+      column1.append(currentCity, timeAndDate, timeOfDay, weatherDescription);
+      //assembles secnod column of data
+      let column2 = $("<div>").addClass("col info");
+      let temp = $("<p>")
+        .addClass("temp")
+        .text(`Temperature: ${convertTemp(time.main.temp)}`);
+      let feelsLike = $("<p>")
+        .addClass("feelsLike")
+        .text(`Feels Like: ${convertTemp(time.main.feels_like)}`);
+      $("<span>").html("&#176;F").appendTo(temp);
+      $("<span>").html("&#176;F").appendTo(feelsLike);
 
-    $("#savedResults").empty();
-    puppyParties.map((party) => displaySavedResults(party));
+      let wind = $("<p>")
+        .addClass("wind")
+        .text(`Wind Speed: ${time.wind.speed} m/s`);
+      let saveButton = $("<button>")
+        .attr("id", index)
+        .addClass("save-button")
+        .text("save");
+      column2.append(temp, feelsLike, wind, saveButton);
+      // adds everything together and renders it to the display
+      result.append(gifHolder, column1, column2);
+      $("#results").append(result);
+    });
+  }
 
-    localStorage.setItem("puppyParties", JSON.stringify(puppyParties));
-
-    console.log(newSavedItem);
-
-
-  })
-
-  function displaySavedResults(party) {
+  function displaySavedResults(party, index) {
     let result = $("<div>").addClass("row results");
     // assembles element for the gif
     let gifHolder = $("<div>").addClass("col s4 blue");
-    let gif = $("<img>")
-      .addClass("gif circle")
-      .attr("src", party.gif)
+    let gif = $("<img>").addClass("gif circle").attr("src", party.gif);
     gifHolder.append(gif);
     //assembles 1st column of data
-    let column1 = $("<div>").addClass("col info");
-    let currentCity = $("<p>")
-      .addClass("currentCity")
-      .text(party.city);
+    let column1 = $("<div>").addClass("col");
+    let currentCity = $("<p>").addClass("currentCity").text(party.city);
     let timeAndDate = $("<p>")
       .addClass("party")
-      .text(party.date);
-    let weatherDescription = $("<p>")
-      .addClass("party")
-      .text(party.weather)
-    column1.append(currentCity, timeAndDate, weatherDescription);
+      .text(dayjs.unix(party.date).format("ddd, MMM D"));
+    let timeOfDay = $("<p>").text(party.timeOfDay);
+    let weatherDescription = $("<p>").addClass("party").text(party.weather);
+    column1.append(currentCity, timeAndDate, timeOfDay, weatherDescription);
     //assembles secnod column of data
-    let column2 = $("<div>").addClass("col info");
-    let temp = $("<p>")
-      .addClass("temp")
-      .text(convertTemp(party.temp));
+    let column2 = $("<div>").addClass("col");
+    let temp = $("<p>").addClass("temp").text(`Temperature: ${party.temp}`);
     let feelsLike = $("<p>")
       .addClass("feelsLike")
-      .text(convertTemp(party.feelsLike));
-    // let saveButton = $("<button>").attr("id", index)
-    //   .addClass("save-button")
-    //   .text("save");
-    column2.append(temp, feelsLike);
+      .text(`Feels Like: ${party.feelsLike}`);
+    $("<span>").html("&#176;F").appendTo(temp);
+    $("<span>").html("&#176;F").appendTo(feelsLike);
+
+    let wind = $("<p>").addClass("wind").text(`Wind Speed: ${party.wind} m/s`);
+    let deleteButton = $("<button>")
+      .attr("key", index)
+      .addClass("delete-button")
+      .text("X");
+    column2.append(temp, feelsLike, wind, deleteButton);
     // adds everything together and renders it to the display
     result.append(column1, column2, gifHolder);
     $("#savedResults").append(result);
   }
 
+  $("#searchBtn").on("click", function (event) {
+    event.preventDefault();
+
+    searchTerms = {
+      minTemp: $("#min-temp").val().trim() || 0,
+      isSun: $("#sun").prop("checked"),
+      isClouds: $("#clouds").prop("checked"),
+      isRain: $("#rain").prop("checked"),
+      isSnow: $("#snow").prop("checked"),
+      isWind: $("#wind").prop("checked"),
+    };
+
+    availableTimes = {
+      morning: $("#morning").prop("checked"),
+      lunch: $("#lunch").prop("checked"),
+      afternoon: $("#afternoon").prop("checked"),
+      evening: $("#evening").prop("checked"),
+    };
+    currentCitySearch = $("#searchField").val().trim();
+    getWeatherData(currentCitySearch);
+  });
+
+  $("#results").on("click", function (event) {
+    event.preventDefault();
+    let newSavedItem = {
+      city: currentCitySearch,
+      date: timeList[event.target.id].dt,
+      timeOfDay: timeList[event.target.id].timeOfDay,
+      weather: timeList[event.target.id].weather[0].description,
+      gif: timeList[event.target.id].gif,
+      temp: convertTemp(timeList[event.target.id].main.temp),
+      feelsLike: convertTemp(timeList[event.target.id].main.feels_like),
+      wind: timeList[event.target.id].wind.speed,
+    };
+
+    let listIndex = puppyParties.findIndex(
+      (party) => party.date === newSavedItem.date
+    );
+    if (listIndex === -1) {
+      puppyParties.push(newSavedItem);
+    } else {
+      console.log("You already have a party at that time!");
+    }
+
+    puppyParties.sort((a, b) => a.date - b.date);
+
+    $("#savedResults").empty();
+    puppyParties.map((party, index) => displaySavedResults(party, index));
+    localStorage.setItem("puppyParties", JSON.stringify(puppyParties));
+  });
+
+  $("#savedResults").on("click", function (event) {
+    event.preventDefault();
+    if ($(event.target).attr("key")) {
+      puppyParties.splice($(event.target).attr("key"), 1);
+      $("#savedResults").empty();
+      puppyParties.map((party, index) => displaySavedResults(party, index));
+      localStorage.setItem("puppyParties", JSON.stringify(puppyParties));
+    }
+  });
 });
