@@ -67,8 +67,8 @@ p {
     float: left;
 }
 
-/* ::placeholder { 
+::placeholder { 
     color:    #AB8459;
     text-align: center;
     font-family: 'Mali', cursive;
-} */
+} 
