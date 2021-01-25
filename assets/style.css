@@ -14,6 +14,10 @@ span {
     color: #AB8459;
 }
 
+h3 {
+    font-size: 20px;
+}
+
 p {
     font-family: 'Mali', cursive;
 }
@@ -21,6 +25,10 @@ p {
 .currentCity {
     font-weight: 750;
     font-size: x-large;
+}
+
+.selection {
+    margin: 10px 0px 0px 10px;
 }
 
 .gif {
@@ -39,21 +47,29 @@ p {
 }
 
 .row {
-    margin: 0px 10px;
+    margin: 10px 0px;
 }
 
 .savedResults {
     border-radius: 25px;
     background-color: #53D9C5;
-    padding: 15px;
+    padding: 10px;
 }
 
 .searchBar {
     border-radius: 25px;
     background-color: #D8D115;
-    padding-left: 25%;
-    padding-right: 25%;
-    padding-bottom: 15px;
+    margin-top: 10px;
+    padding: 10px 30px 15px 30px;
+    text-align: left;
+}
+
+.search-img {
+    max-height: 220px;
+}
+
+.save-img {
+    max-height: 180px;
 }
 
 .smoosh {
@@ -75,5 +91,8 @@ p {
 @media screen and (max-width: 576px) {
     h2 {
         font-size: 30px;
+    }
+    ::placeholder {
+        font-size: 12px;
     }
 }

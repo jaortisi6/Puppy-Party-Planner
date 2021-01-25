@@ -21,68 +21,97 @@
     </header>
 
     <div class="row">
-        <div class="col s6 m2">
-            <div class='row'>
-                <div class="input-field col">
-                    <form class="col-content center-align searchBar">
-                        <input placeholder="Choose a City" id="searchField" type="text" class="validate">
+        <div class="col s12 l6 push-l2" id="results">
 
-                        <p>Choose your Weather</p>
-                        <input placeholder="Enter Min Temp" id="min-temp" type="number" class="validate">
-                        <label>
-                            <input type="checkbox" id='sun' checked />
-                            <span>Sunny</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" id='clouds' checked />
-                            <span>Cloudy</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" id='rain' />
-                            <span>Rainy</span>
-                        </label>
-
-                        <label>
-                            <input type="checkbox" id='wind' />
-                            <span>Windy</span>
-                        </label>
-
-                        <label>
-                            <input type="checkbox" id="snow" />
-                            <span>Snowy</span>
-                        </label>
-                        <br>
-                        <label>
-                            <input type="checkbox" id="morning" checked />
-                            <span>Morning</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" id="lunch" checked />
-                            <span>Lunch</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" id="afternoon" checked />
-                            <span>Afternoon</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" id="evening" checked />
-                            <span>Evening</span>
-                        </label>
-                        <button class="btn waves-effect waves-yellow" id="searchBtn">Party!</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <div class="col s6 m4">
-            <div id="results" class='row results '>
-                <img class="toastie" src="./assets/toast-button.png" alt= "TOASTER STRUEDEL!!! The Standard Poodle!">
+            <div class='row results'>
+                <img class="toastie" src="./assets/toast-button.png" alt="TOASTER STRUEDEL!!! The Standard Poodle!">
                 <h2 class="smoosh ">Welcome!</h2>
                 <p class="smoosh">This is the Puppy Party Planner! Use the search bar to the left to begin planning your
                     perfect puppy party!</p>
             </div>
         </div>
-        <div id="savedResults" class="col s6 m6 ">
+
+        <div class="col s12 l2 pull-l6">
+
+            <form class="col-content center-align searchBar">
+                <div class="row">
+                    <div class="col s4 l12">
+                        <input placeholder="Choose a City" id="searchField" type="text" class="validate">
+
+                        <p>Minimum temperature must be at least 0<span>&#176;F</span></p>
+                        <input placeholder="Enter Min Temp" id="min-temp" type="number" class="validate">
+                    </div>
+                    <div class="col s4 l12 selection">
+                        <p>Choose your Weather</p>
+                        <div>
+                            <label>
+                                <input type="checkbox" id='sun' checked />
+                                <span>Sunny</span>
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                <input type="checkbox" id='clouds' checked />
+                                <span>Cloudy</span>
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                <input type="checkbox" id='rain' />
+                                <span>Rainy</span>
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                <input type="checkbox" id='wind' />
+                                <span>Windy</span>
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                <input type="checkbox" id="snow" />
+                                <span>Snowy</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col s4 l12 selection">
+                        <p>Choose Time of Day</p>
+                        <div>
+                            <label>
+                                <input type="checkbox" id="morning" checked />
+                                <span>Morning</span>
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                <input type="checkbox" id="lunch" checked />
+                                <span>Lunch</span>
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                <input type="checkbox" id="afternoon" checked />
+                                <span>Afternoon</span>
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                <input type="checkbox" id="evening" checked />
+                                <span>Evening</span>
+                            </label>
+                        </div>
+                        <br>
+                        <div class='center-align'>
+                            <button class="btn waves-effect waves-yellow" id="searchBtn">Party!</button>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+
+        <div id="savedResults" class="col s12 l4 ">
             <div class="col-content savedResults">
                 <p> You don’t have any puppy parties planned. Check the weather in your area to get the party started.
                 </p>

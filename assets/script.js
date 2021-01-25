@@ -25,13 +25,12 @@ $(document).ready(function () {
   let puppyParties = JSON.parse(localStorage.getItem("puppyParties")) || [];
   //If there are saved parties, renders parties to the screen
   if (puppyParties.length > 0) {
-    $("#savedResults").empty();
     //Removes any parties with past dates from the screen
     puppyParties = puppyParties.filter(
       (party) => party.date >= Date.now() / 1000
     );
-    localStorage.setItem("puppyParties", JSON.stringify(puppyParties));
-    puppyParties.map((party, index) => displaySavedResults(party, index));
+    // function begins process of rendering saved results
+    preparedSavedResults();
   }
   //Calling the openweathermap API with the search term in the input field
   function getWeatherData(searchTerm) {
@@ -49,7 +48,7 @@ $(document).ready(function () {
         timeList = filterTimes(timeList);
         //Clearing the results field and displaying new results
         $("#results").empty();
-        //If there are results, calls displayTimeInfo for each result 
+        //If there are results, calls displayTimeInfo for each result
         if (timeList.length > 0) {
           // .map fuction sends each item in the array to the function displayTimeInfo
           timeList.map((time, index) => displayTimeInfo(time, index));
@@ -63,10 +62,15 @@ $(document).ready(function () {
       });
   }
   //Filter out any weather conditions that do not match the search criteria
+
+  function filterConditions(conditions) {}
+
   function filterConditions(times) {
     //For each time, the .filter function returns values that align with the desired weather conditions set by the user
     times = times.filter(
-      (time) => convertTemp(time.main.temp) >= searchTerms.minTemp
+      (time) =>
+        convertTemp(time.main.temp) >= searchTerms.minTemp &&
+        convertTemp(time.main.temp) >= 0
     );
     if (!searchTerms.isSun) {
       times = times.filter((time) => time.weather[0].main !== "Clear");
@@ -86,6 +90,13 @@ $(document).ready(function () {
     }
     //No, you cannot actually take you precious puppy out in a thunderstorm!
     times = times.filter((time) => time.weather[0].main !== "Thunderstorm");
+
+    // Changes weather tag to Sun on days with clear weather
+    times.forEach((time) => {
+      if (time.weather[0].main === "Clear") {
+        time.weather[0].main = "Sun";
+      }
+    });
 
     return times;
   }
@@ -142,7 +153,7 @@ $(document).ready(function () {
   // returns feedback if their search returns no results
   function displayNoResults() {
     $("#results").html(
-      "There were no results matching your search, please try again!"
+      "<div class='row results'>There were no results matching your search, please try again!</div>"
     );
   }
 
@@ -153,7 +164,7 @@ $(document).ready(function () {
 
   // This function displays search results
   function displayTimeInfo(time, index) {
-    // This calls the gifphy api for images with puppys matching the weather conditions 
+    // This calls the gifphy api for images with puppys matching the weather conditions
     $.ajax({
       url:
         "https://api.giphy.com/v1/gifs/search?api_key=fZhobxIiFz471XOHLmXNOBjfo8xFJf5b&rating=g&q=cute+puppy+in+the+" +
@@ -169,11 +180,14 @@ $(document).ready(function () {
       let result = $("<div>").addClass("row results");
       // assembles element for the gif
       let gifHolder = $("<div>").addClass("col s4");
-      let gif = $("<img>").addClass("gif circle").attr("src", time.gif);
+      let gif = $("<img>")
+        .addClass("gif circle img-responsive search-img")
+        .attr("src", time.gif)
+        .attr("alt", "an adorable puppy");
 
       gifHolder.append(gif);
       // assembles 1st column of data
-      let column1 = $("<div>").addClass("col info");
+      let column1 = $("<div>").addClass("col s4 info");
       let currentCity = $("<p>")
         .addClass("currentCity")
         .text(currentCitySearch);
@@ -187,7 +201,7 @@ $(document).ready(function () {
 
       column1.append(currentCity, timeAndDate, timeOfDay, weatherDescription);
       // assembles second column of data
-      let column2 = $("<div>").addClass("col info");
+      let column2 = $("<div>").addClass("col s4 info");
       let temp = $("<p>")
         .addClass("temp")
         .text(`Temperature: ${convertTemp(time.main.temp)}`);
@@ -212,14 +226,33 @@ $(document).ready(function () {
     });
   }
 
+  function preparedSavedResults() {
+    $("#savedResults").empty();
+    if (puppyParties.length > 0) {
+      $("#savedResults").append(
+        "<div class='savedResults smoosh row'><h3>Saved Parties</h3></div>"
+      );
+      //Update display and storage
+      puppyParties.map((party, index) => displaySavedResults(party, index));
+      localStorage.setItem("puppyParties", JSON.stringify(puppyParties));
+    } else {
+      $("#savedResults").append(
+        "<div class='savedResults smoosh'><p>You don’t have any puppy parties planned. Check the weather in your area to get the party started.</p></div>"
+      );
+    }
+  }
+
   function displaySavedResults(party, index) {
     let result = $("<div>").addClass("row savedResults");
     // assembles element for the gif
     let gifHolder = $("<div>").addClass("col s4");
-    let gif = $("<img>").addClass("gif circle").attr("src", party.gif);
+    let gif = $("<img>")
+      .addClass("gif circle img-responsive save-img")
+      .attr("src", party.gif)
+      .attr("alt", "an adorable puppy");
     gifHolder.append(gif);
     // assembles 1st column of data
-    let column1 = $("<div>").addClass("col");
+    let column1 = $("<div>").addClass("col s4");
     let currentCity = $("<p>").addClass("currentCity").text(party.city);
     let timeAndDate = $("<p>")
       .addClass("party")
@@ -228,7 +261,7 @@ $(document).ready(function () {
     let weatherDescription = $("<p>").addClass("party").text(party.weather);
     column1.append(currentCity, timeAndDate, timeOfDay, weatherDescription);
     // assembles second column of data
-    let column2 = $("<div>").addClass("col");
+    let column2 = $("<div>").addClass("col s4");
     let temp = $("<p>").addClass("temp").text(`Temperature: ${party.temp}`);
     let feelsLike = $("<p>")
       .addClass("feelsLike")
@@ -300,22 +333,17 @@ $(document).ready(function () {
       //Sorts puppy parties by soonest to latest date/time
       puppyParties.sort((a, b) => a.date - b.date);
       //Displays the saved results and saves to local storage
-      $("#savedResults").empty();
-      puppyParties.map((party, index) => displaySavedResults(party, index));
-      localStorage.setItem("puppyParties", JSON.stringify(puppyParties));
+      preparedSavedResults();
     }
   });
-  //Delete a party 
+  //Delete a party
   $("#savedResults").on("click", function (event) {
     event.preventDefault();
     //Make sure user is clicking delete button
     if ($(event.target).attr("key")) {
       //Remove matching item from array
       puppyParties.splice($(event.target).attr("key"), 1);
-      $("#savedResults").empty();
-      //Update display and storage
-      puppyParties.map((party, index) => displaySavedResults(party, index));
-      localStorage.setItem("puppyParties", JSON.stringify(puppyParties));
+      preparedSavedResults();
     }
   });
 });
