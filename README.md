@@ -8,10 +8,10 @@ Repository is located at [https://github.com/jaortisi6/Puppy-Party-Planner](http
 
 ## SCREENSHOTS
 
-<img src = "assets/Screenshots/Screen Shot 2021-01-23 at 11.29.44 AM.png">
-<img src = "assets/Screenshots/Screen Shot 2021-01-23 at 11.32.14 AM.png">
-<img src = "assets/Screenshots/Screen Shot 2021-01-23 at 11.32.26 AM.png">
-
+<img src = "assets/Screenshots/Screen Shot 2021-01-25 at 6.20.49 PM.png">
+<img src = "assets/Screenshots/Screen Shot 2021-01-25 at 6.21.57 PM.png">
+<img src = "assets/Screenshots/Screen Shot 2021-01-25 at 6.22.08 PM.png">
+<img src = "assets/Screenshots/Screen Shot 2021-01-25 at 6.22.17 PM.png">
 
 ## USER STORY
 
