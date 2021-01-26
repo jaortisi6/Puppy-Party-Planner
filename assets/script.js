@@ -227,15 +227,17 @@ $(document).ready(function () {
   }
 
   function preparedSavedResults() {
+    localStorage.setItem("puppyParties", JSON.stringify(puppyParties));
     $("#savedResults").empty();
+    //Check if saved parties exist
     if (puppyParties.length > 0) {
       $("#savedResults").append(
         "<div class='savedResults smoosh row'><h3>Saved Parties</h3></div>"
       );
-      //Update display and storage
+      // Update Display with current puppyParties
       puppyParties.map((party, index) => displaySavedResults(party, index));
-      localStorage.setItem("puppyParties", JSON.stringify(puppyParties));
     } else {
+      // Indicate that no parties have been saved
       $("#savedResults").append(
         "<div class='savedResults smoosh'><p>You don’t have any puppy parties planned. Check the weather in your area to get the party started.</p></div>"
       );
